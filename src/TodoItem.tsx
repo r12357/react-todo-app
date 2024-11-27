@@ -1,11 +1,16 @@
 import React from "react";
 import { Todo } from "./types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faThumbtack } from "@fortawesome/free-solid-svg-icons";
+import { twMerge } from "tailwind-merge";
+
 
 type Props = {
     todo: Todo;
     updateIsDone: (id: string, value: boolean) => void;
     remove: (id: string) => void;
     edit: (todo: Todo) => void;
+    togglePin: (id: string) => void;
 };
 
 const TodoItem = (props: Props) => {
@@ -13,13 +18,23 @@ const TodoItem = (props: Props) => {
     return (
         <div className="flex items-conter justify-between">
             <div className="flex items-center">
+                <FontAwesomeIcon
+                    icon={faThumbtack}
+                    className={`cursor-pointer mr-2 ${todo.isPinned ? "text-black" : "text-gray-400"}`}
+                    onClick={() => props.togglePin(todo.id)}
+                />
                 <input
                     type="checkbox"
                     checked={todo.isDone}
                     onChange={(e) => props.updateIsDone(todo.id, e.target.checked)}
                     className="mr-1.5 cursor-pointer"
                 />
-                <span className="text-lg">
+                {todo.isDone && (
+                    <span className="rounded mb-1">
+                    [完了済み]
+                    </span>
+                )}
+                <span className={twMerge("mr-2 text-lg", todo.isDone && "line-through text-gray-400")}>
                     {todo.name}
                 </span>
             </div>

@@ -21,6 +21,33 @@ const App = () => {
   const lastAccessKey = "LastAccess";
   const [isEditing, setIsEditing] = useState(false);
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
+  const [currentTime, setCurrentTime] = useState(dayjs());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(dayjs());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+
+  const sortedTodos = [...todos].sort((a, b) => {
+    if (a.isPinned !== b.isPinned) {
+      return a.isPinned ? -1 : 1;
+    }
+    if (a.deadline && b.deadline) {
+      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+    }
+    if (a.deadline) return -1;
+    if (b.deadline) return 1;
+    return 0;
+  });
+
+  const togglePin = (id: string) => {
+    const updatedTodos = todos.map((todo) => todo.id === id ? { ...todo, isPinned: !todo.isPinned } : todo);
+    setTodos(updatedTodos);
+  };
 
   const handleEditClose = () => {
     setIsEditing(false);
@@ -134,6 +161,7 @@ const App = () => {
       isDone: false,
       priority: newTodoPriority,
       deadline: newTodoDeadline,
+      isPinned: false,
     };
     const updatedTodos = [...todos, newTodo];
     setTodos(updatedTodos);
@@ -144,7 +172,17 @@ const App = () => {
 
   return (
     <div className={twMerge("mx-4 mt-10 max-w-2xl md:mx-auto", showNewTaskPrompt && "pointer-events-none")}>
-      <h1 className="mb-4 text-2xl font-bold">TodoApp</h1>
+      <h1 className="mb-4 text-2xl font-bold flex justify-between items-center">
+        TodoApp
+        <div className="text-right">
+          <div className="text-base text-gray-600">
+            {currentTime.format("YYYY/MM/DD")}
+          </div>
+          <div className="text-3xl font-bold text-gray-800">
+            {currentTime.format("HH:mm:ss")}
+          </div>
+        </div>
+      </h1>
       <div className="mb-4">
         <WelcomeMessage
           name="あなた"
@@ -313,13 +351,14 @@ const App = () => {
 
       
       <TodoList
-        todos={todos}
+        todos={sortedTodos}
         updateIsDone={updateIsDone}
         remove={removeTodo}
         edit={(todo) => {
           setIsEditing(true);
           setEditingTodo(todo);
         }}
+        togglePin = {togglePin}
       />
 
 

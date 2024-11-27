@@ -14,6 +14,7 @@ type Props = {
   updateIsDone: (id: string, value: boolean) => void;
   remove: (id: string) => void;
   edit: (todo: Todo) => void;
+  togglePin: (id: string) => void;
 };
 
 const yuusendo_cross = (n: number): JSX.Element[] => {
@@ -43,24 +44,11 @@ const TodoList = (props: Props) => {
             todo={todo}
             remove={props.remove}
             updateIsDone={props.updateIsDone}
-            edit = {props.edit}
+            edit={props.edit}
+            togglePin={props.togglePin}
           />
-        
-          {/* 完了済み表示 */}
-          {todo.isDone && (
-            <span className="rounded mb-1">
-              [完了済み]
-            </span>
-          )}
-          
-          {/* task名 */}
-          <span className={twMerge("mr-2", todo.isDone && "line-through text-gray-400")}>
-            {todo.name}
-          </span>
-            
-
           {/* 優先度 */}
-          <span className="ml-2">
+          <span>
           優先度
           </span>
           <span className="ml-2 text-orange-400">

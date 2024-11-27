@@ -8,6 +8,7 @@ export const initTodos: Todo[] = [
         isDone: false,
         priority: 1,
         deadline: new Date("2024-12-31-23-59"),
+        isPinned: false,
     },
     {
         id: uuid(),
@@ -15,6 +16,7 @@ export const initTodos: Todo[] = [
         isDone: true,
         priority: 2,
         deadline: new Date("2024-11-30-23-59"),
+        isPinned: false,
     },
     {
         id: uuid(),
@@ -22,6 +24,7 @@ export const initTodos: Todo[] = [
         isDone: false,
         priority: 3,
         deadline: null,
+        isPinned: true,
     }
 ];
 
